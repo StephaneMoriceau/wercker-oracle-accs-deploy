@@ -7,7 +7,12 @@ if [ ! -n "$WERCKER_ORACLE_ACCS_DEPLOY_REST_URL" ]; then
 fi
 
 if [ ! -n "$WERCKER_ORACLE_ACCS_DEPLOY_DOMAIN" ]; then
-  error 'Please specify OPC domain'
+  error 'Please specify OPC Deploy domain'
+  exit 1
+fi
+
+if [ ! -n "$WERCKER_ORACLE_ACCS_DEPLOY_STORAGE" ]; then
+  error 'Please specify OPC Storage domain'
   exit 1
 fi
 
@@ -49,13 +54,13 @@ echo "File found '${ARCHIVE_LOCAL}'"
 echo '[info] Creating container'
 curl -i -X PUT \
     -u "${WERCKER_ORACLE_ACCS_DEPLOY_OPC_USER}:${WERCKER_ORACLE_ACCS_DEPLOY_OPC_PASSWORD}" \
-    "https://${WERCKER_ORACLE_ACCS_DEPLOY_DOMAIN}.storage.oraclecloud.com/v1/Storage-$WERCKER_ORACLE_ACCS_DEPLOY_DOMAIN/$WERCKER_ORACLE_ACCS_DEPLOY_APPLICATION_NAME"
+    "https://${WERCKER_ORACLE_ACCS_DEPLOY_STORAGE}.storage.oraclecloud.com/v1/Storage-$WERCKER_ORACLE_ACCS_DEPLOY_STORAGE/$WERCKER_ORACLE_ACCS_DEPLOY_APPLICATION_NAME"
 
 # PUT ARCHIVE IN STORAGE CONTAINER
 echo '[info] Uploading application to storage'
 curl -i -X PUT \
   -u "${WERCKER_ORACLE_ACCS_DEPLOY_OPC_USER}:${WERCKER_ORACLE_ACCS_DEPLOY_OPC_PASSWORD}" \
-  "https://${WERCKER_ORACLE_ACCS_DEPLOY_DOMAIN}.storage.oraclecloud.com/v1/Storage-$WERCKER_ORACLE_ACCS_DEPLOY_DOMAIN/$WERCKER_ORACLE_ACCS_DEPLOY_APPLICATION_NAME/$WERCKER_ORACLE_ACCS_DEPLOY_FILE" \
+  "https://${WERCKER_ORACLE_ACCS_DEPLOY_STORAGE}.storage.oraclecloud.com/v1/Storage-$WERCKER_ORACLE_ACCS_DEPLOY_STORAGE/$WERCKER_ORACLE_ACCS_DEPLOY_APPLICATION_NAME/$WERCKER_ORACLE_ACCS_DEPLOY_FILE" \
       -T "$ARCHIVE_LOCAL"
 
 # See if application exists
